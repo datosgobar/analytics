@@ -1,0 +1,11 @@
+jupyter_contrib_nbextensions
+numpy
+pandas
+matplotlib
+seaborn
+import_ipynb
+sklearn
+requests
+click
+tqdm
+mechanize
