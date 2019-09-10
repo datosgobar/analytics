@@ -13056,19 +13056,6 @@ ul.typeahead-list  > li > a.pull-right {
 .ansi-bold { font-weight: bold; }
 
     </style>
-<style type="text/css">
-    /*This file contains any manual css for this page that needs to override the global styles.
-This is only required when different pages style the same element differently. This is just
-a hack to deal with our current css styles and no new styling should be added in this file.*/
-
-#ipython-main-app {
-    position: relative;
-}
-#jupyter-main-app {
-    position: relative;
-}
-
-    </style>
 
 
 <style type="text/css">
@@ -13133,13 +13120,271 @@ div#notebook {
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># setup</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># para importar módulos en &#39;../../tools&#39;</span>
+<span class="n">module_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;../../tools&#39;</span><span class="p">))</span>
+<span class="k">if</span> <span class="n">module_path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">module_path</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">locale</span>
+
+<span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">patches</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># from tools.download import download</span>
+
+<span class="kn">import</span> <span class="nn">analytics_tools</span>
+
+<span class="kn">from</span> <span class="nn">IPython.core.display</span> <span class="k">import</span> <span class="n">display</span><span class="p">,</span> <span class="n">HTML</span>
+
+<span class="n">locale</span><span class="o">.</span><span class="n">setlocale</span><span class="p">(</span><span class="n">locale</span><span class="o">.</span><span class="n">LC_ALL</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;precision&#39;</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.float_format&#39;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">locale</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># formarters</span>
+<span class="n">f_ar</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">locale</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%.2f</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">d_ar</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">locale</span><span class="o">.</span><span class="n">format_string</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">tz_arg</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">tz_localize</span><span class="p">(</span><span class="s1">&#39;UTC&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="s1">&#39;America/Argentina/Buenos_Aires&#39;</span><span class="p">)</span>
+
+<span class="n">TABLE_COUNTER</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">TABLE_TEMPLATE</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;center&gt;&lt;strong&gt;&lt;small&gt;</span><span class="si">{title}</span><span class="s2">&lt;/small&gt;&lt;/strong&gt;&lt;/center&gt;</span>
+<span class="s2">&lt;center&gt;</span><span class="si">{table}</span><span class="s2">&lt;/center&gt;</span>
+<span class="s2">&lt;center&gt;&lt;strong&gt;&lt;small&gt;Tabla </span><span class="si">{table_number}</span><span class="s2">&lt;/small&gt;&lt;/strong&gt;&lt;/center&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">def</span> <span class="nf">add_totals</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+    <span class="n">df_to_append</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">numeric_only</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    
+    <span class="n">df_appended</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_to_append</span><span class="p">)</span>
+    
+    <span class="n">as_list</span> <span class="o">=</span> <span class="n">df_appended</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">as_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">as_list</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Total&#39;</span>
+    <span class="n">df_appended</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">as_list</span>
+    
+    <span class="k">return</span> <span class="n">df_appended</span>
+
+<span class="k">def</span> <span class="nf">table_counter</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">TABLE_COUNTER</span>
+    <span class="n">TABLE_COUNTER</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">TABLE_COUNTER</span>
+
+<span class="k">def</span> <span class="nf">add_style_to_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">subset</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">render</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">set_properties</span><span class="p">(</span>
+        <span class="n">subset</span><span class="o">=</span> <span class="n">subset</span><span class="p">,</span> 
+        <span class="o">**</span><span class="p">{</span><span class="s1">&#39;font-weight&#39;</span><span class="p">:</span> <span class="n">font_weight</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span><span class="n">color</span><span class="p">})</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">render</span>
+
+<span class="k">def</span> <span class="nf">add_title</span><span class="p">(</span><span class="n">df_html</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="n">str_table</span> <span class="o">=</span> <span class="n">TABLE_TEMPLATE</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span> <span class="n">table</span><span class="o">=</span><span class="n">df_html</span><span class="p">,</span> <span class="n">table_number</span><span class="o">=</span><span class="n">table_counter</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">str_table</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">put_df_on_report</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">subset</span><span class="p">:</span>
+        <span class="n">df_html</span> <span class="o">=</span> <span class="n">add_style_to_df</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">subset</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="n">font_weight</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">df_html</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_html</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">add_title</span><span class="p">(</span><span class="n">df_html</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">read_files_to_df</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Lee CSVs de misma estructura en un directorio a un solo DataFrame.&quot;&quot;&quot;</span>
+
+    <span class="n">file_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;*.csv&quot;</span><span class="p">)</span>
+    <span class="n">dfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+           <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file_pattern</span><span class="p">)]</span>
+        
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">count_file_row</span><span class="p">(</span><span class="n">directory</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Lee CSVs de misma estructura en un directorio a un solo DataFrame.&quot;&quot;&quot;</span>
+    
+    <span class="n">days_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">file_pattern</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">directory</span><span class="p">,</span> <span class="s2">&quot;*.csv&quot;</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">file_pattern</span><span class="p">):</span>
+        <span class="n">day_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf8&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">day_df</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">day</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="o">-</span><span class="mi">14</span><span class="p">:</span><span class="o">-</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">days_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">day</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">file</span><span class="p">])</span>
+        
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">days_list</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># actualizo los analytics de ambas apis</span>
+<span class="n">analytics_tools</span><span class="o">.</span><span class="n">update_analytics</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dir_sdt</span> <span class="o">=</span> <span class="n">analytics_tools</span><span class="o">.</span><span class="n">DIR_DATA_SDT</span>
+<span class="n">dir_gr</span> <span class="o">=</span> <span class="n">analytics_tools</span><span class="o">.</span><span class="n">DIR_DATA_GR</span>
+
+<span class="n">paths</span> <span class="o">=</span> <span class="p">[</span><span class="n">dir_sdt</span><span class="p">,</span> <span class="n">dir_gr</span><span class="p">]</span>
+<span class="n">titles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Series de Tiempo&#39;</span><span class="p">,</span> <span class="s1">&#39;Georef&#39;</span><span class="p">]</span>
+<span class="n">apis</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;series-tiempo&#39;</span><span class="p">,</span> <span class="s1">&#39;georef&#39;</span><span class="p">]</span>
+
+<span class="n">htmls</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">api</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">paths</span><span class="p">,</span><span class="n">titles</span><span class="p">,</span><span class="n">apis</span><span class="p">):</span>
+    
+    <span class="n">df_analytics</span> <span class="o">=</span> <span class="n">read_files_to_df</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+    <span class="n">df_analytics</span><span class="p">[</span><span class="s1">&#39;start_time_utc&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df_analytics</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">])</span>
+<span class="c1">#     df_analytics[&#39;start_time&#39;] = pd.DatetimeIndex(df_analytics[&#39;start_time&#39;]).tz_localize(&#39;UTC&#39;).tz_convert(tz=&#39;America/Argentina/Buenos_Aires&#39;)</span>
+    <span class="n">df_analytics</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">df_analytics</span><span class="p">[</span><span class="s1">&#39;start_time&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">tz_convert</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="s1">&#39;America/Argentina/Buenos_Aires&#39;</span><span class="p">)</span>
+    <span class="n">df_analytics</span><span class="p">[</span><span class="s2">&quot;date_full&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">df_analytics</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">()</span>
+    <span class="n">df_analytics</span><span class="p">[</span><span class="s2">&quot;date&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">df_analytics</span><span class="o">.</span><span class="n">start_time</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m&#39;</span><span class="p">)</span>
+
+    <span class="n">end_date</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">df_analytics</span><span class="p">[</span><span class="s2">&quot;date_full&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())[:</span><span class="mi">10</span><span class="p">]</span>
+    
+    <span class="n">ips_birthdate</span> <span class="o">=</span> <span class="n">df_analytics</span><span class="p">[[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;ip_address&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">min</span><span class="p">()[</span><span class="s1">&#39;date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">ips_birthdate</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;birthdate&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">unique_ips_dates</span> <span class="o">=</span> <span class="n">df_analytics</span><span class="p">[[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">,</span><span class="s1">&#39;date&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+    <span class="n">df_ips</span> <span class="o">=</span> <span class="n">unique_ips_dates</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ips_birthdate</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;ip_address&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+    <span class="c1"># cantidad de ips únicas</span>
+    <span class="n">ips_nunique</span> <span class="o">=</span> <span class="n">df_ips</span><span class="o">.</span><span class="n">ip_address</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+
+    <span class="c1"># cantidad de ips nuevos por mes</span>
+    <span class="n">ips_born_per_month</span> <span class="o">=</span> <span class="n">df_ips</span><span class="p">[[</span><span class="s1">&#39;birthdate&#39;</span><span class="p">,</span><span class="s1">&#39;ip_address&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;birthdate&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">ips_born_per_month</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;ip_address&#39;</span><span class="p">:</span><span class="s1">&#39;ips_nuevos&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># cantidad de ips por mes</span>
+    <span class="n">ips_per_month</span> <span class="o">=</span> <span class="n">df_ips</span><span class="p">[[</span><span class="s1">&#39;date&#39;</span><span class="p">,</span><span class="s1">&#39;ip_address&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">nunique</span><span class="p">()[</span><span class="s1">&#39;ip_address&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+    <span class="n">ips_per_month</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;ip_address&#39;</span><span class="p">:</span><span class="s1">&#39;ips_unicos&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># acumulado de ips únicas por mes</span>
+    <span class="n">ips_per_month</span><span class="p">[</span><span class="s1">&#39;ips_acumulados&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips_per_month</span><span class="o">.</span><span class="n">ips_unicos</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+
+    <span class="n">df_agg_ips</span> <span class="o">=</span> <span class="n">ips_born_per_month</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">ips_per_month</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;birthdate&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">)</span>
+    <span class="n">df_agg_ips</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;date&#39;</span><span class="p">:</span><span class="s1">&#39;&#39;</span><span class="p">},</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df_agg_ips</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">df_agg_ips</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;birthdate&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">df_agg_ips</span> <span class="o">=</span> <span class="n">add_totals</span><span class="p">(</span><span class="n">df_agg_ips</span><span class="p">)</span>
+
+    <span class="n">ips_recurrentes</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">df_agg_ips</span><span class="o">.</span><span class="n">ips_nuevos</span><span class="o">/</span><span class="n">df_agg_ips</span><span class="o">.</span><span class="n">ips_unicos</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+    <span class="n">df_agg_ips</span><span class="p">[</span><span class="s1">&#39;ips_recurrentes&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ips_recurrentes</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s1">&#39;</span><span class="si">{:.2f}</span><span class="s1"> %&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+
+    <span class="n">df_agg_ips</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;../reports/ips-historicos-</span><span class="si">{}</span><span class="s1">.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">api</span><span class="p">))</span>
+    
+    <span class="n">htmls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">put_df_on_report</span><span class="p">(</span><span class="n">df_agg_ips</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> - Hasta el día </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">end_date</span><span class="p">)))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
 
 
+<div class="output_area">
+
+    <div class="prompt"></div>
 
 
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>/Users/abenassi/anaconda/envs/analytics/lib/python3.7/site-packages/ipykernel_launcher.py:8: FutureWarning: Sorting because non-concatenation axis is not aligned. A future version
+of pandas will change to not sort by default.
 
+To accept the future behavior, pass &#39;sort=False&#39;.
 
+To retain the current behavior and silence the warning, pass &#39;sort=True&#39;.
 
+  
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sdt</span> <span class="o">=</span> <span class="n">htmls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">gr</span> <span class="o">=</span> <span class="n">htmls</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
@@ -13150,6 +13395,16 @@ div#notebook {
 </div>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">sdt</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -13162,7 +13417,7 @@ div#notebook {
 
 
 <div class="output_html rendered_html output_subarea ">
-<center><strong><small>Series de Tiempo - Hasta el día 2019-08-05</small></strong></center><center><table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>ips_nuevos</th>      <th>ips_unicos</th>      <th>ips_acumulados</th>      <th>ips_recurrentes</th>    </tr>  </thead>  <tbody>    <tr>      <th>2018-01</th>      <td>203</td>      <td>203</td>      <td>203</td>      <td>0.00 %</td>    </tr>    <tr>      <th>2018-02</th>      <td>201</td>      <td>265</td>      <td>468</td>      <td>24.15 %</td>    </tr>    <tr>      <th>2018-03</th>      <td>148</td>      <td>231</td>      <td>699</td>      <td>35.93 %</td>    </tr>    <tr>      <th>2018-04</th>      <td>33</td>      <td>39</td>      <td>738</td>      <td>15.38 %</td>    </tr>    <tr>      <th>2018-05</th>      <td>83</td>      <td>153</td>      <td>891</td>      <td>45.75 %</td>    </tr>    <tr>      <th>2018-06</th>      <td>219</td>      <td>325</td>      <td>1216</td>      <td>32.62 %</td>    </tr>    <tr>      <th>2018-07</th>      <td>164</td>      <td>249</td>      <td>1465</td>      <td>34.14 %</td>    </tr>    <tr>      <th>2018-08</th>      <td>384</td>      <td>485</td>      <td>1950</td>      <td>20.82 %</td>    </tr>    <tr>      <th>2018-09</th>      <td>1090</td>      <td>1261</td>      <td>3211</td>      <td>13.56 %</td>    </tr>    <tr>      <th>2018-10</th>      <td>931</td>      <td>1194</td>      <td>4405</td>      <td>22.03 %</td>    </tr>    <tr>      <th>2018-11</th>      <td>4195</td>      <td>4665</td>      <td>9070</td>      <td>10.08 %</td>    </tr>    <tr>      <th>2018-12</th>      <td>2896</td>      <td>3698</td>      <td>12768</td>      <td>21.69 %</td>    </tr>    <tr>      <th>2019-01</th>      <td>2915</td>      <td>3928</td>      <td>16696</td>      <td>25.79 %</td>    </tr>    <tr>      <th>2019-02</th>      <td>4168</td>      <td>5371</td>      <td>22067</td>      <td>22.40 %</td>    </tr>    <tr>      <th>2019-03</th>      <td>6858</td>      <td>8425</td>      <td>30492</td>      <td>18.60 %</td>    </tr>    <tr>      <th>2019-04</th>      <td>13661</td>      <td>16213</td>      <td>46705</td>      <td>15.74 %</td>    </tr>    <tr>      <th>2019-05</th>      <td>16356</td>      <td>20717</td>      <td>67422</td>      <td>21.05 %</td>    </tr>    <tr>      <th>2019-06</th>      <td>11739</td>      <td>16385</td>      <td>83807</td>      <td>28.36 %</td>    </tr>    <tr>      <th>2019-07</th>      <td>16522</td>      <td>25116</td>      <td>108923</td>      <td>34.22 %</td>    </tr>    <tr>      <th>2019-08</th>      <td>2498</td>      <td>5886</td>      <td>114809</td>      <td>57.56 %</td>    </tr>    <tr>      <th>Total</th>      <td>85264</td>      <td>114809</td>      <td>528005</td>      <td>25.73 %</td>    </tr>  </tbody></table></center><center><strong><small>Tabla 1</small></strong></center>
+<center><strong><small>Series de Tiempo - Hasta el día 2019-09-09</small></strong></center><center><table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>ips_nuevos</th>      <th>ips_unicos</th>      <th>ips_acumulados</th>      <th>ips_recurrentes</th>    </tr>  </thead>  <tbody>    <tr>      <th>2018-01</th>      <td>203</td>      <td>203</td>      <td>203</td>      <td>0.00 %</td>    </tr>    <tr>      <th>2018-02</th>      <td>201</td>      <td>265</td>      <td>468</td>      <td>24.15 %</td>    </tr>    <tr>      <th>2018-03</th>      <td>148</td>      <td>231</td>      <td>699</td>      <td>35.93 %</td>    </tr>    <tr>      <th>2018-04</th>      <td>33</td>      <td>39</td>      <td>738</td>      <td>15.38 %</td>    </tr>    <tr>      <th>2018-05</th>      <td>83</td>      <td>153</td>      <td>891</td>      <td>45.75 %</td>    </tr>    <tr>      <th>2018-06</th>      <td>219</td>      <td>325</td>      <td>1216</td>      <td>32.62 %</td>    </tr>    <tr>      <th>2018-07</th>      <td>164</td>      <td>249</td>      <td>1465</td>      <td>34.14 %</td>    </tr>    <tr>      <th>2018-08</th>      <td>384</td>      <td>485</td>      <td>1950</td>      <td>20.82 %</td>    </tr>    <tr>      <th>2018-09</th>      <td>1090</td>      <td>1261</td>      <td>3211</td>      <td>13.56 %</td>    </tr>    <tr>      <th>2018-10</th>      <td>931</td>      <td>1194</td>      <td>4405</td>      <td>22.03 %</td>    </tr>    <tr>      <th>2018-11</th>      <td>4195</td>      <td>4665</td>      <td>9070</td>      <td>10.08 %</td>    </tr>    <tr>      <th>2018-12</th>      <td>2896</td>      <td>3698</td>      <td>12768</td>      <td>21.69 %</td>    </tr>    <tr>      <th>2019-01</th>      <td>2915</td>      <td>3928</td>      <td>16696</td>      <td>25.79 %</td>    </tr>    <tr>      <th>2019-02</th>      <td>4168</td>      <td>5371</td>      <td>22067</td>      <td>22.40 %</td>    </tr>    <tr>      <th>2019-03</th>      <td>6858</td>      <td>8425</td>      <td>30492</td>      <td>18.60 %</td>    </tr>    <tr>      <th>2019-04</th>      <td>13661</td>      <td>16213</td>      <td>46705</td>      <td>15.74 %</td>    </tr>    <tr>      <th>2019-05</th>      <td>16356</td>      <td>20717</td>      <td>67422</td>      <td>21.05 %</td>    </tr>    <tr>      <th>2019-06</th>      <td>11739</td>      <td>16385</td>      <td>83807</td>      <td>28.36 %</td>    </tr>    <tr>      <th>2019-07</th>      <td>16522</td>      <td>25116</td>      <td>108923</td>      <td>34.22 %</td>    </tr>    <tr>      <th>2019-08</th>      <td>26389</td>      <td>40556</td>      <td>149479</td>      <td>34.93 %</td>    </tr>    <tr>      <th>2019-09</th>      <td>7091</td>      <td>15143</td>      <td>164622</td>      <td>53.17 %</td>    </tr>    <tr>      <th>Total</th>      <td>116246</td>      <td>164622</td>      <td>727297</td>      <td>29.39 %</td>    </tr>  </tbody></table></center><center><strong><small>Tabla 1</small></strong></center>
 </div>
 
 </div>
@@ -13172,6 +13427,16 @@ div#notebook {
 
 </div>
 <div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">gr</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
 
 <div class="output_wrapper">
 <div class="output">
@@ -13184,7 +13449,7 @@ div#notebook {
 
 
 <div class="output_html rendered_html output_subarea ">
-<center><strong><small>Georef - Hasta el día 2019-08-05</small></strong></center><center><table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>ips_nuevos</th>      <th>ips_unicos</th>      <th>ips_acumulados</th>      <th>ips_recurrentes</th>    </tr>  </thead>  <tbody>    <tr>      <th>2018-07</th>      <td>24</td>      <td>24</td>      <td>24</td>      <td>0.00 %</td>    </tr>    <tr>      <th>2018-08</th>      <td>209</td>      <td>227</td>      <td>251</td>      <td>7.93 %</td>    </tr>    <tr>      <th>2018-09</th>      <td>422</td>      <td>487</td>      <td>738</td>      <td>13.35 %</td>    </tr>    <tr>      <th>2018-10</th>      <td>15350</td>      <td>15556</td>      <td>16294</td>      <td>1.32 %</td>    </tr>    <tr>      <th>2018-11</th>      <td>129650</td>      <td>133849</td>      <td>150143</td>      <td>3.14 %</td>    </tr>    <tr>      <th>2018-12</th>      <td>76930</td>      <td>98694</td>      <td>248837</td>      <td>22.05 %</td>    </tr>    <tr>      <th>2019-01</th>      <td>52015</td>      <td>74121</td>      <td>322958</td>      <td>29.82 %</td>    </tr>    <tr>      <th>2019-02</th>      <td>26507</td>      <td>36613</td>      <td>359571</td>      <td>27.60 %</td>    </tr>    <tr>      <th>2019-03</th>      <td>16225</td>      <td>23756</td>      <td>383327</td>      <td>31.70 %</td>    </tr>    <tr>      <th>2019-04</th>      <td>15951</td>      <td>23773</td>      <td>407100</td>      <td>32.90 %</td>    </tr>    <tr>      <th>2019-05</th>      <td>30875</td>      <td>42672</td>      <td>449772</td>      <td>27.65 %</td>    </tr>    <tr>      <th>2019-06</th>      <td>32573</td>      <td>47560</td>      <td>497332</td>      <td>31.51 %</td>    </tr>    <tr>      <th>2019-07</th>      <td>42064</td>      <td>61142</td>      <td>558474</td>      <td>31.20 %</td>    </tr>    <tr>      <th>2019-08</th>      <td>3332</td>      <td>6509</td>      <td>564983</td>      <td>48.81 %</td>    </tr>    <tr>      <th>Total</th>      <td>442127</td>      <td>564983</td>      <td>3959804</td>      <td>21.75 %</td>    </tr>  </tbody></table></center><center><strong><small>Tabla 2</small></strong></center>
+<center><strong><small>Georef - Hasta el día 2019-09-09</small></strong></center><center><table border="1" class="dataframe">  <thead>    <tr style="text-align: right;">      <th></th>      <th>ips_nuevos</th>      <th>ips_unicos</th>      <th>ips_acumulados</th>      <th>ips_recurrentes</th>    </tr>  </thead>  <tbody>    <tr>      <th>2018-07</th>      <td>24</td>      <td>24</td>      <td>24</td>      <td>0.00 %</td>    </tr>    <tr>      <th>2018-08</th>      <td>209</td>      <td>227</td>      <td>251</td>      <td>7.93 %</td>    </tr>    <tr>      <th>2018-09</th>      <td>422</td>      <td>487</td>      <td>738</td>      <td>13.35 %</td>    </tr>    <tr>      <th>2018-10</th>      <td>15350</td>      <td>15556</td>      <td>16294</td>      <td>1.32 %</td>    </tr>    <tr>      <th>2018-11</th>      <td>129650</td>      <td>133849</td>      <td>150143</td>      <td>3.14 %</td>    </tr>    <tr>      <th>2018-12</th>      <td>76930</td>      <td>98694</td>      <td>248837</td>      <td>22.05 %</td>    </tr>    <tr>      <th>2019-01</th>      <td>52015</td>      <td>74121</td>      <td>322958</td>      <td>29.82 %</td>    </tr>    <tr>      <th>2019-02</th>      <td>26507</td>      <td>36613</td>      <td>359571</td>      <td>27.60 %</td>    </tr>    <tr>      <th>2019-03</th>      <td>16225</td>      <td>23756</td>      <td>383327</td>      <td>31.70 %</td>    </tr>    <tr>      <th>2019-04</th>      <td>15951</td>      <td>23773</td>      <td>407100</td>      <td>32.90 %</td>    </tr>    <tr>      <th>2019-05</th>      <td>30875</td>      <td>42672</td>      <td>449772</td>      <td>27.65 %</td>    </tr>    <tr>      <th>2019-06</th>      <td>32573</td>      <td>47560</td>      <td>497332</td>      <td>31.51 %</td>    </tr>    <tr>      <th>2019-07</th>      <td>42064</td>      <td>61142</td>      <td>558474</td>      <td>31.20 %</td>    </tr>    <tr>      <th>2019-08</th>      <td>15777</td>      <td>27315</td>      <td>585789</td>      <td>42.24 %</td>    </tr>    <tr>      <th>2019-09</th>      <td>4563</td>      <td>8923</td>      <td>594712</td>      <td>48.86 %</td>    </tr>    <tr>      <th>Total</th>      <td>459135</td>      <td>594712</td>      <td>4575322</td>      <td>22.80 %</td>    </tr>  </tbody></table></center><center><strong><small>Tabla 2</small></strong></center>
 </div>
 
 </div>
@@ -13193,7 +13458,19 @@ div#notebook {
 </div>
 
 </div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
 
+    </div>
+</div>
+</div>
+
+</div>
     </div>
   </div>
 </body>
