@@ -4,17 +4,31 @@ REPORT ?=./reports/series-informe-bcra.html
 
 sspm_report: NOTEBOOK =./notebooks/series-informe-sspm.ipynb
 sspm_report: REPORT =./reports/series-informe-sspm.html
+bcra_report: NOTEBOOK =./notebooks/series-informe-bcra.ipynb
+bcra_report: REPORT =./reports/series-informe-bcra.html
+all_report: NOTEBOOK =./notebooks/series-informe-total.ipynb
+all_report: REPORT =./reports/series-informe-total.html
 
 all: pull reports commit push
 
 pull:
 	git -C .. pull
 
-reports: sspm_report
+reports: all_report sspm_report bcra_report
 
 sspm_report: update_analytics
 	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
-	jupyter nbconvert  --to html --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert --to html --output-dir ./reports $(NOTEBOOK)
+	$(MAKE) clean_white_spaces REPORT=$(REPORT)
+
+bcra_report: update_analytics
+	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert --to html --output-dir ./reports $(NOTEBOOK)
+	$(MAKE) clean_white_spaces REPORT=$(REPORT)
+
+all_report: update_analytics
+	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert --to html --output-dir ./reports $(NOTEBOOK)
 	$(MAKE) clean_white_spaces REPORT=$(REPORT)
 
 clean_white_spaces:

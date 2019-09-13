@@ -9,3 +9,8 @@ requests
 click
 tqdm
 mechanize
+wordcloud
+squarify
+dask
+dask[dataframe]
+arrow
