@@ -14,7 +14,7 @@ all: pull reports commit push
 pull:
 	git -C .. pull
 
-reports: all_report sspm_report bcra_report
+reports: all_report
 
 sspm_report: update_analytics
 	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
