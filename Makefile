@@ -1,4 +1,5 @@
 VIRTUALENV = analytics
+CONDA_ENV = analytics
 ANALYTICS_PIP ?= pip3
 ANALYTICS_PYTHON ?= python3
 
