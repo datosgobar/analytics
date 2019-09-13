@@ -4,6 +4,12 @@ ANALYTICS_PYTHON ?= python3
 
 DATE = date +%y-%m-%dT%H:%M:%S
 
+install_anaconda:
+	wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh
+	bash Miniconda3-latest-Linux-x86_64.sh
+	rm Miniconda3-latest-Linux-x86_64.sh
+	export PATH=$$PATH:/home/series/miniconda3/bin
+
 setup_anaconda:
 	conda create -n $(CONDA_ENV) --no-default-packages
 	source activate $(CONDA_ENV); \
