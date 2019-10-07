@@ -14,7 +14,7 @@ reports: georef_report
 
 georef_report: update_analytics
 	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
-	jupyter nbconvert  --to html --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert  --no-input --to html --output-dir ./reports $(NOTEBOOK)
 	$(MAKE) clean_white_spaces REPORT=$(REPORT)
 
 clean_white_spaces:

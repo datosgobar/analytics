@@ -18,17 +18,17 @@ reports: all_report
 
 sspm_report: update_analytics
 	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
-	jupyter nbconvert --to html --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert --to html --no-input --output-dir ./reports $(NOTEBOOK)
 	$(MAKE) clean_white_spaces REPORT=$(REPORT)
 
 bcra_report: update_analytics
 	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
-	jupyter nbconvert --to html --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert --to html --no-input --output-dir ./reports $(NOTEBOOK)
 	$(MAKE) clean_white_spaces REPORT=$(REPORT)
 
 all_report: update_analytics
 	jupyter nbconvert --execute --ExecutePreprocessor.timeout=-1 --to notebook --inplace --output-dir ./reports $(NOTEBOOK)
-	jupyter nbconvert --to html --output-dir ./reports $(NOTEBOOK)
+	jupyter nbconvert --to html --no-input --output-dir ./reports $(NOTEBOOK)
 	$(MAKE) clean_white_spaces REPORT=$(REPORT)
 
 clean_white_spaces:
