@@ -1,0 +1,8 @@
+{
+	"https://apis.datos.gob.ar/management/ingresar/login":
+		[
+			{"user": "pass"}
+		],
+	"analytics_series_zip": "data/analytics-series.zip",
+	"analytics_georef_zip": "data/analytics-georef.zip"
+}

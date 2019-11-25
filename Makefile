@@ -44,3 +44,6 @@ push:
 
 update_analytics:
 	python3 ./tools/analytics_tools.py
+
+update_analytics_public_dump: update_analytics
+	python3 ./tools/analytics_dump.py

@@ -7,6 +7,8 @@ import requests
 import click
 from tqdm import tqdm
 from datetime import datetime, date, timedelta
+import zipfile
+from glob import glob
 
 import pandas as pd
 
@@ -31,7 +33,7 @@ APIS = ['series-tiempo-prod', 'georef-prod']
 APIS_PATHS = {'series-tiempo-prod': DIR_DATA_SDT,
               'georef-prod': DIR_DATA_GR}
 
-CREDENTIALS_FILE = '/credentials.json'
+CREDENTIALS_FILE = '/config.json'
 CREDENTIALS_PATH = REPO_DIR + CREDENTIALS_FILE
 
 

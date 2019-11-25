@@ -16,3 +16,5 @@ series-tiempo-ar-api/notebooks/\.ipynb_checkpoints/
 credentials\.json
 
 data/
+config.json
+.ipynb_checkpoints
