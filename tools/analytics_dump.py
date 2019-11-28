@@ -66,7 +66,7 @@ def create_analytics_zip(analytics_csv_pattern, analytics_zip,
 
 def main():
     REPO_NAME = "analytics"
-    REPO_DIR = os.path.abspath('./').split(REPO_NAME)[0] + REPO_NAME
+    REPO_DIR = os.path.abspath(os.path.dirname(__file__))
     CREDENTIALS_FILE = '/config.json'
     CREDENTIALS_PATH = REPO_DIR + CREDENTIALS_FILE
     config = json.load(open(CREDENTIALS_PATH))
