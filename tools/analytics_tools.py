@@ -22,7 +22,7 @@ API_MANAGEMENT_URL = 'https://apis.datos.gob.ar'
 DATE_FMT = '%Y-%m-%d'
 
 REPO_NAME = 'analytics'
-REPO_DIR = os.path.abspath('./').split(REPO_NAME)[0] + REPO_NAME
+REPO_DIR = os.path.abspath(os.path.dirname(__file__))
 
 DIR_DATA_SDT = REPO_DIR + '/data/series-tiempo'
 DIR_DATA_GR = REPO_DIR + '/data/georef'
