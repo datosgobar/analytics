@@ -58,8 +58,11 @@ def add_analytics_file_to_zip(zip_path, csv_path, process_function,
 def create_analytics_zip(analytics_csv_pattern, analytics_zip,
                          process_function):
     # toma archivos de analytics ya comprimidos
-    zipf = zipfile.ZipFile(analytics_zip)
-    zipped_files = zipf.namelist()
+    try:
+        zipf = zipfile.ZipFile(analytics_zip)
+        zipped_files = zipf.namelist()
+    except:
+        zipped_files = []
 
     for csv_path in glob(analytics_csv_pattern):
         csv_filename = os.path.basename(csv_path)
