@@ -42,9 +42,14 @@ def add_analytics_file_to_zip(zip_path, csv_path, process_function,
     df_input = pd.read_csv(csv_path, encoding="utf8")
     df_output = process_function(df_input)
 
-    with zipfile.ZipFile(zip_path, 'a', compression=zipfile.ZIP_DEFLATED) as zp:
-        zp.writestr(os.path.basename(csv_path),
-                    df_output.to_csv(encoding="utf8", index=False))
+    try:
+        with zipfile.ZipFile(zip_path, 'a', compression=zipfile.ZIP_DEFLATED) as zp:
+            zp.writestr(os.path.basename(csv_path),
+                        df_output.to_csv(encoding="utf8", index=False))
+    except:
+        with zipfile.ZipFile(zip_path, 'w', compression=zipfile.ZIP_DEFLATED) as zp:
+            zp.writestr(os.path.basename(csv_path),
+                        df_output.to_csv(encoding="utf8", index=False))
 
     if remove_after:
         os.remove(csv_path)
