@@ -2,7 +2,7 @@ VIRTUALENV = analytics
 CONDA_ENV = analytics
 ANALYTICS_PIP ?= pip3
 ANALYTICS_PYTHON ?= python3
-
+ACTIVATE = /home/analytics/miniconda3/bin/activate
 DATE = date +%y-%m-%dT%H:%M:%S
 
 install_anaconda:
@@ -42,8 +42,22 @@ commit:
 push:
 	git push
 
-update_analytics:
+update_analytics_local:
 	python3 ./tools/analytics_tools.py
 
-update_analytics_public_dump: update_analytics
+update_analytics_public_dump_local: update_analytics
 	python3 ./tools/analytics_dump.py
+
+update_analytics:
+	source activate $(CONDA_ENV); python ./tools/analytics_tools.py
+
+update_analytics_public_dump: update_analytics
+	source $(ACTIVATE) $(CONDA_ENV); python ./tools/analytics_dump.py
+
+update_environment: create_dir
+	git pull
+	source $(ACTIVATE) $(CONDA_ENV); pip install -r requirements.txt --upgrade
+
+update_environment_local: create_dir
+	git pull
+	source activate $(CONDA_ENV); pip install -r requirements.txt --upgrade
