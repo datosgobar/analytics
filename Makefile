@@ -54,10 +54,10 @@ update_analytics:
 update_analytics_public_dump: update_analytics
 	source $(ACTIVATE) $(CONDA_ENV); python ./tools/analytics_dump.py
 
-update_environment: create_dir
+update_environment:
 	git pull
 	source $(ACTIVATE) $(CONDA_ENV); pip install -r requirements.txt --upgrade
 
-update_environment_local: create_dir
+update_environment_local:
 	git pull
 	source activate $(CONDA_ENV); pip install -r requirements.txt --upgrade
